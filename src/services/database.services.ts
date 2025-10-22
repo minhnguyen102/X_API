@@ -9,7 +9,7 @@ class DatabaseService {
   private db: Db
   constructor() {
     this.client = new MongoClient(uri)
-    this.db = this.client.db(`${process.env.DB_NAME}`)
+    this.db = this.client.db(process.env.DB_NAME)
   }
 
   async connect() {
@@ -17,14 +17,14 @@ class DatabaseService {
       // Send a ping to confirm a successful connection
       await this.db.command({ ping: 1 })
       console.log('Pinged your deployment. You successfully connected to MongoDB!')
-    } finally {
-      // Ensures that the client will close when you finish/error
-      await this.client.close()
+    } catch (error) {
+      console.log(error)
+      throw error
     }
   }
 
   get users(): Collection<User> {
-    return this.db.collection(`${process.env.DB_COLLECTION_USERS}`)
+    return this.db.collection(process.env.DB_COLLECTION_USERS as string)
   }
 }
 

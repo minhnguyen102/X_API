@@ -1,5 +1,7 @@
-import { MongoClient, ServerApiVersion } from 'mongodb'
-const uri = 'mongodb+srv://minhnguyen102:KwbamXogjjTMQXkR@cluster0.sqjfe.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+import { MongoClient } from 'mongodb'
+import { config } from 'dotenv'
+config()
+const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.sqjfe.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
 
 class DatabaseService {
   private client: MongoClient

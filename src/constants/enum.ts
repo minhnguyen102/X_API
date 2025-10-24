@@ -3,3 +3,10 @@ export enum UserVerifyStatus {
   Verified,
   Banner
 }
+
+export enum TokenType {
+  AccessToken,
+  RefreshToken,
+  EmailVerifyToken,
+  ForgotPasswordToken
+}

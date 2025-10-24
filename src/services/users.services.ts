@@ -4,6 +4,7 @@ import { registerReqBody } from '~/models/requests/User.requests'
 import { hashPassword } from '~/untils/crypto'
 import { signToken } from '~/untils/jwt'
 import { TokenType } from '~/constants/enum'
+import ms from 'ms'
 
 class UsersServices {
   private signAccessToken(user_id: string) {
@@ -11,6 +12,9 @@ class UsersServices {
       payload: {
         user_id,
         token_type: TokenType.AccessToken
+      },
+      optionals: {
+        expiresIn: process.env.EXPIRES_ACCESS_TOKEN as ms.StringValue
       }
     })
   }
@@ -19,6 +23,9 @@ class UsersServices {
       payload: {
         user_id,
         token_type: TokenType.RefreshToken
+      },
+      optionals: {
+        expiresIn: process.env.EXPIRES_REFRESH_TOKEN as ms.StringValue
       }
     })
   }
@@ -30,7 +37,15 @@ class UsersServices {
         password: hashPassword(payload.password)
       })
     )
-    return result
+    const user_id = result.insertedId.toString()
+    const [accessToken, refreshToken] = await Promise.all([
+      this.signAccessToken(user_id),
+      this.signRefreshToken(user_id)
+    ])
+    return {
+      accessToken,
+      refreshToken
+    }
   }
 
   async checkEmailExist(email: string) {

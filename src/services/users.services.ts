@@ -1,5 +1,5 @@
-import User from "~/models/schemas/user.schema";
-import databaseService from "./database.services";
+import User from '~/models/schemas/User.schema'
+import databaseService from './database.services'
 
 class UsersServices {
   async register(payload: { email: string; password: string }) {

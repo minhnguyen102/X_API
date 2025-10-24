@@ -1,6 +1,6 @@
 import { MongoClient, Db, Collection } from 'mongodb'
 import { config } from 'dotenv'
-import User from '~/models/schemas/user.schema'
+import User from '~/models/schemas/User.schema'
 config()
 const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.sqjfe.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
 

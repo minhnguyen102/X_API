@@ -8,7 +8,7 @@ app.use('/users', userRouter)
 databaseService.connect().catch(console.dir)
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-  console.log('Error: ', err)
+  console.log('Error:', err.message)
   res.status(400).json({
     err: err.message
   })

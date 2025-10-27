@@ -9,6 +9,8 @@ import { ObjectId } from 'mongodb'
 import { ErrorWithStatus } from '~/models/Errors'
 import USER_MESSAGES from '~/constants/message'
 import HTTP_STATUS from '~/constants/httpStatus'
+import RefreshToken from '~/models/schemas/RefreshToken.schema'
+import { ref } from 'process'
 
 class UsersServices {
   private signAccessToken(user_id: string) {
@@ -49,6 +51,9 @@ class UsersServices {
     )
     const user_id = result.insertedId.toString()
     const [accessToken, refreshToken] = await this.signAccessAndRefreshToken(user_id)
+    await databaseService.refresh_tokens.insertOne(
+      new RefreshToken({ user_id: new ObjectId(user_id), token: refreshToken })
+    )
     return {
       accessToken,
       refreshToken
@@ -57,6 +62,9 @@ class UsersServices {
 
   async login(user_id: string) {
     const [accessToken, refreshToken] = await this.signAccessAndRefreshToken(user_id)
+    await databaseService.refresh_tokens.insertOne(
+      new RefreshToken({ user_id: new ObjectId(user_id), token: refreshToken })
+    )
     return {
       accessToken,
       refreshToken

@@ -3,16 +3,51 @@ import { checkSchema } from 'express-validator'
 import HTTP_STATUS from '~/constants/httpStatus'
 import USER_MESSAGES from '~/constants/message'
 import { ErrorWithStatus } from '~/models/Errors'
+import databaseService from '~/services/database.services'
 import usersServices from '~/services/users.services'
+import { hashPassword } from '~/untils/crypto'
 import { validate } from '~/untils/validation'
 
-export const loginValidator = (req: Request, res: Response, next: NextFunction) => {
-  const { email, password } = req.body
-  if (!email || !password) {
-    return res.status(400).send(USER_MESSAGES.EMAIL_AND_PASSWORD_ARE_REQUIRED)
-  }
-  next()
-}
+export const loginValidator = validate(
+  checkSchema({
+    email: {
+      trim: true,
+      isEmail: {
+        errorMessage: USER_MESSAGES.EMAIL_IS_INVALID
+      },
+      custom: {
+        options: async (value, { req }) => {
+          const user = await databaseService.users.findOne({ email: value, password: hashPassword(req.body.password) })
+          if (!user) {
+            throw new ErrorWithStatus({
+              message: USER_MESSAGES.EMAIL_OR_PASSWORD_IS_INCORRECT,
+              status: HTTP_STATUS.NOT_FOUND
+            })
+          }
+          req.user = user
+          return true
+        }
+      }
+    },
+    password: {
+      notEmpty: {
+        errorMessage: USER_MESSAGES.PASSWORD_IS_REQUIRED
+      },
+      isString: {
+        errorMessage: USER_MESSAGES.PASSWORD_MUST_BE_STRING
+      },
+      isStrongPassword: {
+        options: {
+          minLength: 8,
+          minLowercase: 1,
+          minUppercase: 1,
+          minSymbols: 1
+        },
+        errorMessage: USER_MESSAGES.PASSWORD_MUST_BE_STRONG
+      }
+    }
+  })
+)
 
 export const registerValidator = validate(
   checkSchema({

@@ -5,6 +5,10 @@ import { hashPassword } from '~/untils/crypto'
 import { signToken } from '~/untils/jwt'
 import { TokenType } from '~/constants/enum'
 import ms from 'ms'
+import { ObjectId } from 'mongodb'
+import { ErrorWithStatus } from '~/models/Errors'
+import USER_MESSAGES from '~/constants/message'
+import HTTP_STATUS from '~/constants/httpStatus'
 
 class UsersServices {
   private signAccessToken(user_id: string) {
@@ -18,6 +22,7 @@ class UsersServices {
       }
     })
   }
+
   private signRefreshToken(user_id: string) {
     return signToken({
       payload: {
@@ -29,6 +34,11 @@ class UsersServices {
       }
     })
   }
+
+  private signAccessAndRefreshToken(user_id: string) {
+    return Promise.all([this.signAccessToken(user_id), this.signRefreshToken(user_id)])
+  }
+
   async register(payload: registerReqBody) {
     const result = await databaseService.users.insertOne(
       new User({
@@ -38,10 +48,15 @@ class UsersServices {
       })
     )
     const user_id = result.insertedId.toString()
-    const [accessToken, refreshToken] = await Promise.all([
-      this.signAccessToken(user_id),
-      this.signRefreshToken(user_id)
-    ])
+    const [accessToken, refreshToken] = await this.signAccessAndRefreshToken(user_id)
+    return {
+      accessToken,
+      refreshToken
+    }
+  }
+
+  async login(user_id: string) {
+    const [accessToken, refreshToken] = await this.signAccessAndRefreshToken(user_id)
     return {
       accessToken,
       refreshToken

@@ -4,7 +4,13 @@ import { loginValidator, registerValidator } from '~/middlewares/validation.midd
 import { wrapHandlerFunction } from '~/untils/wrapHandler'
 const userRouter = Router()
 
-userRouter.post('/login', loginValidator, loginController)
+/**
+ * Description: Login
+ * PATH: /users/login
+ * Method: Post
+ * Body: { email: string, password: string }
+ */
+userRouter.post('/login', loginValidator, wrapHandlerFunction(loginController))
 
 /**
  * Description: Register a new user

@@ -20,14 +20,16 @@ const USER_MESSAGES = {
   CONFIRM_PASSWORD_MUST_BE_STRING: 'Confirm password must be a string',
   CONFIRM_PASSWORD_LENGTH: 'Confirm password must be between 6 and 50 characters',
   PASSWORDS_DO_NOT_MATCH: 'Passwords do not match',
+  PASSWORD_MUST_BE_STRONG:
+    'Password must be at least 8 characters long, containing at least 1 uppercase letter, 1 lowercase letter, and 1 special symbol.',
 
   // === User Fields ===
   NAME_IS_REQUIRED: 'Name is required',
   NAME_MUST_BE_STRING: 'Name must be a string',
-  NAME_LENGTH: 'Name must be between 1 and 100 characters',
+  NAME_LENGTH: 'Name must be between 1 and 50 characters',
 
   EMAIL_IS_REQUIRED: 'Email is required',
-  EMAIL_IS_INVALID: 'Email is invalid',
+  EMAIL_IS_INVALID: 'Invalid email format',
   EMAIL_MUST_BE_STRING: 'Email must be a string',
 
   DATE_OF_BIRTH_MUST_BE_ISO8601: 'Date of birth must be in ISO 8601 format',

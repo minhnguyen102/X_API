@@ -1,0 +1,41 @@
+const USER_MESSAGES = {
+  // === General ===
+  VALIDATION_ERROR: 'Validation error',
+  TOKEN_IS_REQUIRED: 'Token is required',
+  TOKEN_IS_INVALID: 'Token is invalid',
+  USER_NOT_FOUND: 'User not found',
+  ACCESS_DENIED: 'Access denied', // 403 Forbidden
+
+  // === Register / Login / Logout ===
+  REGISTER_SUCCESS: 'Register successfully',
+  LOGIN_SUCCESS: 'Login successfully',
+  LOGOUT_SUCCESS: 'Logout successfully',
+  EMAIL_ALREADY_EXISTS: 'This email already exists',
+  EMAIL_OR_PASSWORD_IS_INCORRECT: 'Email or password is incorrect',
+  EMAIL_AND_PASSWORD_ARE_REQUIRED: 'Email and password are required',
+  PASSWORD_IS_REQUIRED: 'Password is required',
+  PASSWORD_MUST_BE_STRING: 'Password must be a string',
+  PASSWORD_LENGTH: 'Password must be between 6 and 50 characters',
+  CONFIRM_PASSWORD_IS_REQUIRED: 'Confirm password is required',
+  CONFIRM_PASSWORD_MUST_BE_STRING: 'Confirm password must be a string',
+  CONFIRM_PASSWORD_LENGTH: 'Confirm password must be between 6 and 50 characters',
+  PASSWORDS_DO_NOT_MATCH: 'Passwords do not match',
+
+  // === User Fields ===
+  NAME_IS_REQUIRED: 'Name is required',
+  NAME_MUST_BE_STRING: 'Name must be a string',
+  NAME_LENGTH: 'Name must be between 1 and 100 characters',
+
+  EMAIL_IS_REQUIRED: 'Email is required',
+  EMAIL_IS_INVALID: 'Email is invalid',
+  EMAIL_MUST_BE_STRING: 'Email must be a string',
+
+  DATE_OF_BIRTH_MUST_BE_ISO8601: 'Date of birth must be in ISO 8601 format',
+  IMAGE_IS_INVALID: 'Image format is invalid',
+
+  // === Follow ===
+  ALREADY_FOLLOWED: 'You already followed this user',
+  NOT_FOLLOWED_YET: 'You have not followed this user'
+}
+
+export default USER_MESSAGES

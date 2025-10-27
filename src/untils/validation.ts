@@ -26,6 +26,7 @@ export const validate = (validation: RunnableValidationChains<ValidationChain>) 
       // Nếu là lỗi 422 (Entity Error)
       entityError.errors[key] = errorsObject[key]
     }
+    // console.log(entityError)
     next(entityError)
   }
 }

@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import { checkSchema } from 'express-validator'
 import HTTP_STATUS from '~/constants/httpStatus'
+import USER_MESSAGES from '~/constants/message'
 import { ErrorWithStatus } from '~/models/Errors'
 import usersServices from '~/services/users.services'
 import { validate } from '~/untils/validation'
@@ -8,7 +9,7 @@ import { validate } from '~/untils/validation'
 export const loginValidator = (req: Request, res: Response, next: NextFunction) => {
   const { email, password } = req.body
   if (!email || !password) {
-    return res.status(400).send('Email or password miss')
+    return res.status(400).send(USER_MESSAGES.EMAIL_AND_PASSWORD_ARE_REQUIRED)
   }
   next()
 }
@@ -35,7 +36,7 @@ export const registerValidator = validate(
           const result = await usersServices.checkEmailExist(value)
           if (result) {
             throw new ErrorWithStatus({
-              message: 'Email already exists',
+              message: USER_MESSAGES.EMAIL_ALREADY_EXISTS,
               status: HTTP_STATUS.CONFLICT
             })
           }
@@ -69,7 +70,7 @@ export const registerValidator = validate(
       custom: {
         options: (value, { req }) => {
           if (value !== req.body.password) {
-            throw new Error('Confirm password does not match password')
+            throw new Error(USER_MESSAGES.PASSWORDS_DO_NOT_MATCH)
           }
           return true
         }

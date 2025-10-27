@@ -7,7 +7,7 @@ import User from '~/models/schemas/User.schema'
 import usersServices from '~/services/users.services'
 
 export const loginController = async (req: Request, res: Response) => {
-  const { password } = req.body
+  throw new Error('Loi that roi anh oi')
   const user = req.user as User
   const user_id = user._id as ObjectId
   const result = await usersServices.login(user_id.toString())
@@ -18,7 +18,6 @@ export const loginController = async (req: Request, res: Response) => {
 }
 
 export const registerController = async (req: Request<ParamsDictionary, any, registerReqBody>, res: Response) => {
-  // throw new Error('Loi that roi anh oi')
   const result = await usersServices.register(req.body)
   res.json({
     message: USER_MESSAGES.REGISTER_SUCCESS,

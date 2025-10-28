@@ -42,7 +42,8 @@ const USER_MESSAGES = {
   ACCESS_TOKEN_IS_REQUIRED: 'Access token is required',
   REFRESH_TOKEN_IS_REQUIRED: 'Refresh token is required',
   USED_REFRESH_TOKEN_OR_NOT_EXIST: 'Used refresh token or not exist',
-  REFRESH_TOKEN_IS_INVALID: 'Refresh token is invalid'
+  REFRESH_TOKEN_IS_INVALID: 'Refresh token is invalid',
+  REFRESH_TOKEN_SUCCESS: 'Refresh token success'
 }
 
 export default USER_MESSAGES

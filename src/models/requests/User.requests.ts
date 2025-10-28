@@ -11,6 +11,9 @@ export interface registerReqBody {
 export interface logoutReqBody {
   refresh_token: string
 }
+export interface refreshTokenReqBody {
+  refresh_token: string
+}
 
 export interface TokenPayload extends JwtPayload {
   user_id: string

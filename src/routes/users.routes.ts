@@ -1,5 +1,10 @@
 import { NextFunction, Router, Request, Response } from 'express'
-import { loginController, logoutController, registerController } from '~/controllers/users.controllers'
+import {
+  loginController,
+  logoutController,
+  refreshTokenController,
+  registerController
+} from '~/controllers/users.controllers'
 import {
   accessTokenValidator,
   loginValidator,
@@ -26,12 +31,20 @@ userRouter.post('/login', loginValidator, wrapHandlerFunction(loginController))
 userRouter.post('/register', registerValidator, wrapHandlerFunction(registerController))
 
 /**
- * Description: Register a new user
+ * Description: Logout
  * PATH: /users/logout
  * Method: Post
  * Body: { refresh_token: string}
  * Headers: {Authorization: Bearer access_token}
  */
 userRouter.post('/logout', accessTokenValidator, refreshTokenValidator, wrapHandlerFunction(logoutController))
+
+/**
+ * Description: Refrersh Token
+ * PATH: /users/refresh-token
+ * Method: Post
+ * Body: { refresh_token: string}
+ */
+userRouter.post('/refresh-token', refreshTokenValidator, wrapHandlerFunction(refreshTokenController))
 
 export default userRouter

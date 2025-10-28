@@ -2,9 +2,8 @@ import { Request, Response } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
 import { ObjectId } from 'mongodb'
 import USER_MESSAGES from '~/constants/message'
-import { logoutReqBody, registerReqBody } from '~/models/requests/User.requests'
+import { logoutReqBody, refreshTokenReqBody, registerReqBody, TokenPayload } from '~/models/requests/User.requests'
 import User from '~/models/schemas/User.schema'
-import databaseService from '~/services/database.services'
 import usersServices from '~/services/users.services'
 
 export const loginController = async (req: Request, res: Response) => {
@@ -29,4 +28,17 @@ export const logoutController = async (req: Request<ParamsDictionary, any, logou
   const { refresh_token } = req.body
   const result = await usersServices.logout(refresh_token)
   res.json(result)
+}
+
+export const refreshTokenController = async (
+  req: Request<ParamsDictionary, any, refreshTokenReqBody>,
+  res: Response
+) => {
+  const { refresh_token } = req.body
+  const { user_id } = req.decoded_refresh_token as TokenPayload
+  const result = await usersServices.refreshToken({ user_id, refresh_token })
+  res.json({
+    message: USER_MESSAGES.REFRESH_TOKEN_SUCCESS,
+    result
+  })
 }

@@ -75,6 +75,24 @@ class UsersServices {
     }
   }
 
+  async refreshToken({ user_id, refresh_token }: { user_id: string; refresh_token: string }) {
+    const [new_access_token, new_refresh_token] = await Promise.all([
+      this.signAccessToken(user_id),
+      this.signRefreshToken(user_id),
+      databaseService.refresh_tokens.deleteOne({ token: refresh_token })
+    ])
+    const r = await databaseService.refresh_tokens.insertOne(
+      new RefreshToken({
+        user_id: new ObjectId(user_id),
+        token: new_refresh_token
+      })
+    )
+    return {
+      access_token: new_access_token,
+      refresh_token: new_refresh_token
+    }
+  }
+
   async checkEmailExist(email: string) {
     const isEmailExist = await databaseService.users.findOne({ email })
     return Boolean(isEmailExist)

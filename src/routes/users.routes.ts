@@ -1,6 +1,11 @@
 import { NextFunction, Router, Request, Response } from 'express'
-import { loginController, registerController } from '~/controllers/users.controllers'
-import { accessTokenValidator, loginValidator, registerValidator } from '~/middlewares/validation.middlewares'
+import { loginController, logoutController, registerController } from '~/controllers/users.controllers'
+import {
+  accessTokenValidator,
+  loginValidator,
+  refreshTokenValidator,
+  registerValidator
+} from '~/middlewares/validation.middlewares'
 import { wrapHandlerFunction } from '~/untils/wrapHandler'
 const userRouter = Router()
 
@@ -27,10 +32,6 @@ userRouter.post('/register', registerValidator, wrapHandlerFunction(registerCont
  * Body: { refresh_token: string}
  * Headers: {Authorization: Bearer access_token}
  */
-userRouter.post('/logout', accessTokenValidator, (req, res) => {
-  res.json({
-    message: 'Logout successfully'
-  })
-})
+userRouter.post('/logout', accessTokenValidator, refreshTokenValidator, wrapHandlerFunction(logoutController))
 
 export default userRouter

@@ -39,7 +39,10 @@ const USER_MESSAGES = {
   ALREADY_FOLLOWED: 'You already followed this user',
   NOT_FOLLOWED_YET: 'You have not followed this user',
 
-  ACCESS_TOKEN_IS_REQUIRED: 'Access token is required'
+  ACCESS_TOKEN_IS_REQUIRED: 'Access token is required',
+  REFRESH_TOKEN_IS_REQUIRED: 'Refresh token is required',
+  USED_REFRESH_TOKEN_OR_NOT_EXIST: 'Used refresh token or not exist',
+  REFRESH_TOKEN_IS_INVALID: 'Refresh token is invalid'
 }
 
 export default USER_MESSAGES

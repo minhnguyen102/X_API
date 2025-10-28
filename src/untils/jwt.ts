@@ -1,9 +1,5 @@
-import { error } from 'console'
 import jwt, { SignOptions } from 'jsonwebtoken'
-import { reject } from 'lodash'
-import { resolve } from 'path'
-import HTTP_STATUS from '~/constants/httpStatus'
-import { ErrorWithStatus } from '~/models/Errors'
+import { TokenPayload } from '~/models/requests/User.requests'
 
 export const signToken = ({
   payload,
@@ -34,16 +30,12 @@ export const verifyToken = ({
   token: string
   secretOrPublicKey?: string
 }) => {
-  return new Promise<jwt.JwtPayload>((resolve, reject) => {
+  return new Promise<TokenPayload>((resolve, reject) => {
     jwt.verify(token, secretOrPublicKey, (error, decode) => {
       if (error) {
-        const err = new ErrorWithStatus({
-          message: error.message,
-          status: HTTP_STATUS.UNAUTHORIZED
-        })
-        return reject(err)
+        return reject(error)
       }
-      resolve(decode as jwt.JwtPayload)
+      resolve(decode as TokenPayload)
     })
   })
 }

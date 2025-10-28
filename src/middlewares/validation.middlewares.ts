@@ -1,6 +1,6 @@
-import { verify } from 'crypto'
-import { Request, Response, NextFunction } from 'express'
-import { checkSchema, header } from 'express-validator'
+import { Request } from 'express'
+import { checkSchema } from 'express-validator'
+import { JsonWebTokenError } from 'jsonwebtoken'
 import HTTP_STATUS from '~/constants/httpStatus'
 import USER_MESSAGES from '~/constants/message'
 import { ErrorWithStatus } from '~/models/Errors'
@@ -9,6 +9,7 @@ import usersServices from '~/services/users.services'
 import { hashPassword } from '~/untils/crypto'
 import { verifyToken } from '~/untils/jwt'
 import { validate } from '~/untils/validation'
+import _ from 'lodash'
 
 export const loginValidator = validate(
   checkSchema(
@@ -169,13 +170,63 @@ export const accessTokenValidator = validate(
                 status: HTTP_STATUS.UNAUTHORIZED
               })
             }
-            const decoded_access_token = await verifyToken({ token: access_token })
-            req.decoded_access_token = decoded_access_token
+            try {
+              const decoded_access_token = await verifyToken({ token: access_token })
+              ;(req as Request).decoded_access_token = decoded_access_token
+            } catch (error) {
+              throw new ErrorWithStatus({
+                message: _.capitalize((error as any).message),
+                status: HTTP_STATUS.UNAUTHORIZED
+              })
+            }
+
             return true
           }
         }
       }
     },
     ['headers']
+  )
+)
+
+export const refreshTokenValidator = validate(
+  checkSchema(
+    {
+      refresh_token: {
+        notEmpty: {
+          errorMessage: USER_MESSAGES.REFRESH_TOKEN_IS_REQUIRED
+        },
+        custom: {
+          options: async (value: string, { req }) => {
+            try {
+              const [isExistRefreshToken, decoded_refresh_token] = await Promise.all([
+                databaseService.refresh_tokens.findOne({ token: value }),
+                verifyToken({ token: value })
+              ])
+              ;(req as Request).decoded_refresh_token = decoded_refresh_token
+
+              // Lỗi liên quan đến tìm kiếm trong db (1)
+              if (isExistRefreshToken === null) {
+                throw new ErrorWithStatus({
+                  message: USER_MESSAGES.USED_REFRESH_TOKEN_OR_NOT_EXIST,
+                  status: HTTP_STATUS.UNAUTHORIZED
+                })
+              }
+            } catch (error) {
+              // Lỗi khi verifyToken
+              if (error instanceof JsonWebTokenError) {
+                throw new ErrorWithStatus({
+                  message: USER_MESSAGES.REFRESH_TOKEN_IS_INVALID,
+                  status: HTTP_STATUS.UNAUTHORIZED
+                })
+              }
+              throw error //(1) => throw lại ở đây => Bắt bên defaultErrorHandler
+            }
+            return true
+          }
+        }
+      }
+    },
+    ['body']
   )
 )

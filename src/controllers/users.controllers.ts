@@ -2,12 +2,12 @@ import { Request, Response } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
 import { ObjectId } from 'mongodb'
 import USER_MESSAGES from '~/constants/message'
-import { registerReqBody } from '~/models/requests/User.requests'
+import { logoutReqBody, registerReqBody } from '~/models/requests/User.requests'
 import User from '~/models/schemas/User.schema'
+import databaseService from '~/services/database.services'
 import usersServices from '~/services/users.services'
 
 export const loginController = async (req: Request, res: Response) => {
-  // throw new Error('Loi that roi anh oi')
   const user = req.user as User
   const user_id = user._id as ObjectId
   const result = await usersServices.login(user_id.toString())
@@ -23,4 +23,10 @@ export const registerController = async (req: Request<ParamsDictionary, any, reg
     message: USER_MESSAGES.REGISTER_SUCCESS,
     result
   })
+}
+
+export const logoutController = async (req: Request<ParamsDictionary, any, logoutReqBody>, res: Response) => {
+  const { refresh_token } = req.body
+  const result = await usersServices.logout(refresh_token)
+  res.json(result)
 }

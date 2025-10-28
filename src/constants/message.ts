@@ -37,7 +37,9 @@ const USER_MESSAGES = {
 
   // === Follow ===
   ALREADY_FOLLOWED: 'You already followed this user',
-  NOT_FOLLOWED_YET: 'You have not followed this user'
+  NOT_FOLLOWED_YET: 'You have not followed this user',
+
+  ACCESS_TOKEN_IS_REQUIRED: 'Access token is required'
 }
 
 export default USER_MESSAGES

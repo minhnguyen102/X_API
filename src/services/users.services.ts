@@ -6,11 +6,7 @@ import { signToken } from '~/untils/jwt'
 import { TokenType } from '~/constants/enum'
 import ms from 'ms'
 import { ObjectId } from 'mongodb'
-import { ErrorWithStatus } from '~/models/Errors'
-import USER_MESSAGES from '~/constants/message'
-import HTTP_STATUS from '~/constants/httpStatus'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
-import { ref } from 'process'
 
 class UsersServices {
   private signAccessToken(user_id: string) {
